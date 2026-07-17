@@ -11,8 +11,7 @@
 <title>안시내 커버 스튜디오</title>
 <style>
   @font-face{ font-family:'Pretendard'; font-weight:45 920; font-style:normal; font-display:swap;
-    src:url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/PretendardVariable.woff2') format('woff2-variations'),
-        url('https://fastly.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/PretendardVariable.woff2') format('woff2-variations'); }
+    src:url('https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2') format('woff2-variations'); }
   :root{ --cream:#EFE9DC; --ink:#2A2A28; --muted:#6b6250; --green:#3A5A40; --line:#d8d2c4; }
   *{ box-sizing:border-box; }
   body{ margin:0; font-family:'Pretendard',system-ui,sans-serif; color:var(--ink);
@@ -190,9 +189,9 @@ function draw(){
   drawCover(W,H);
 
   ctx.fillStyle='rgba(0,0,0,'+(state.scrim/100)+')'; ctx.fillRect(0,0,W,H);
-  const g=ctx.createLinearGradient(0,H*0.4,0,H*0.92);
-  g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,0.72)');
-  ctx.fillStyle=g; ctx.fillRect(0,H*0.4,W,H*0.52);
+  const g=ctx.createLinearGradient(0,H*0.52,0,H);
+  g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,0.55)');
+  ctx.fillStyle=g; ctx.fillRect(0,H*0.52,W,H*0.48);
 
   ctx.font="600 30px Pretendard";
   const pill=(state.series||'')+' · '+(state.no||'');
@@ -246,8 +245,16 @@ function exportPng(cb){ const cfg=MODE[state.mode];
   showSafe=false; draw();
   cv.toBlob(b=>{ showSafe=(cfg.safe); draw(); cb(b); },'image/png'); }
 document.getElementById('dl').addEventListener('click',()=>{
-  exportPng(b=>{ const a=document.createElement('a');
-    a.href=URL.createObjectURL(b); a.download=MODE[state.mode].file+'_'+(state.no||'')+'.png'; a.click(); });
+  exportPng(async b=>{
+    const name=MODE[state.mode].file+'_'+(state.no||'')+'.png';
+    const file=new File([b],name,{type:'image/png'});
+    const isTouch = matchMedia('(pointer:coarse)').matches;
+    if(isTouch && navigator.canShare && navigator.canShare({files:[file]})){
+      try{ await navigator.share({files:[file]}); return; }
+      catch(e){ if(e && e.name==='AbortError') return; }
+    }
+    const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; a.click();
+  });
 });
 document.getElementById('copy').addEventListener('click',()=>{
   try{ exportPng(async b=>{ await navigator.clipboard.write([new ClipboardItem({'image/png':b})]);
