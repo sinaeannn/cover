@@ -95,7 +95,7 @@
     </div>
 
     <label>텍스트 상하 위치 (↑ 위 · 아래 ↓)</label>
-    <input type="range" id="ty" min="20" max="100" value="92" step="1">
+    <input type="range" id="ty" min="0" max="100" value="92" step="1">
 
     <label>시리즈 이름 (좌상단 라벨)</label>
     <input type="text" id="series" value="오늘의 책">
@@ -123,9 +123,9 @@
 const cv=document.getElementById('c'), ctx=cv.getContext('2d');
 const frame=document.getElementById('frame');
 const MODE={
-  feed:{W:1080,H:1350,series:'오늘의 책',no:'01',pillX:48,pillY:48,bandTop:520,bandBot:1240,
+  feed:{W:1080,H:1350,series:'오늘의 책',no:'01',pillX:48,pillY:48,bandTop:330,bandBot:1230,
         handleOff:52,tagSize:40,handleSize:30,hsize:94,safe:false,fmax:300,file:'오늘의책'},
-  reels:{W:1080,H:1920,series:'단독주택 사용법',no:'EP1',pillX:56,pillY:150,bandTop:700,bandBot:1500,
+  reels:{W:1080,H:1920,series:'단독주택 사용법',no:'EP1',pillX:56,pillY:150,bandTop:430,bandBot:1520,
         handleOff:340,tagSize:42,handleSize:32,hsize:100,safe:true,fmax:230,file:'단독주택사용법'},
 };
 let img=null, showSafe=false;
